@@ -1,0 +1,355 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Nexo API",
+    "version": "1.0.0",
+    "description": "API cho hệ thống chat Nexo: xác thực, bạn bè, hội thoại và nhắn tin."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5001/api",
+      "description": "Local development server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "Đăng ký, đăng nhập, xác thực người dùng"
+    },
+    { "name": "Friends", "description": "Kết bạn và quản lý danh sách bạn bè" },
+    { "name": "Conversations", "description": "Tạo và lấy hội thoại" },
+    { "name": "Messages", "description": "Gửi và nhận tin nhắn" }
+  ],
+  "paths": {
+    "/auth/signup": {
+      "post": {
+        "summary": "Đăng ký tài khoản",
+        "description": "Tạo tài khoản mới với username, email và mật khẩu.",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "password", "email"],
+                "properties": {
+                  "username": { "type": "string", "example": "haiuser" },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "123456"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "hai@gmail.com"
+                  },
+                  "firstName": { "type": "string", "example": "Hai" },
+                  "lastName": { "type": "string", "example": "User" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Đăng ký thành công" },
+          "400": { "description": "Dữ liệu không hợp lệ" },
+          "500": { "description": "Lỗi server" }
+        }
+      }
+    },
+
+    "/auth/signin": {
+      "post": {
+        "summary": "Đăng nhập",
+        "description": "Đăng nhập bằng username và password. Trả về accessToken, refreshToken được lưu trong cookie.",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "password"],
+                "properties": {
+                  "username": { "type": "string", "example": "haiuser" },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Đăng nhập thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User Hai User đã logged in!"
+                    },
+                    "accessToken": {
+                      "type": "string",
+                      "example": "eyJhbGciOi..."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Sai thông tin đăng nhập" }
+        }
+      }
+    },
+
+    "/auth/signout": {
+      "post": {
+        "summary": "Đăng xuất",
+        "description": "Xóa refresh token trong cookie.",
+        "tags": ["Authentication"],
+        "responses": {
+          "200": { "description": "Đăng xuất thành công" },
+          "500": { "description": "Lỗi server" }
+        }
+      }
+    },
+
+    "/auth/refresh": {
+      "post": {
+        "summary": "Refresh access token",
+        "description": "Tạo access token mới từ refresh token.",
+        "tags": ["Authentication"],
+        "responses": {
+          "200": { "description": "Refresh token thành công" },
+          "401": { "description": "Refresh token không hợp lệ" }
+        }
+      }
+    },
+
+    "/users/me": {
+      "get": {
+        "summary": "Lấy thông tin người dùng hiện tại",
+        "description": "Yêu cầu access token hợp lệ.",
+        "tags": ["Authentication"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Thông tin user" },
+          "401": { "description": "Chưa đăng nhập" }
+        }
+      }
+    },
+
+    "/friends/requests": {
+      "post": {
+        "summary": "Gửi lời mời kết bạn",
+        "tags": ["Friends"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["to"],
+                "properties": {
+                  "to": {
+                    "type": "string",
+                    "example": "64faed19defb37e90657d7d6"
+                  },
+                  "message": { "type": "string", "example": "Kết bạn nha 👋" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Gửi lời mời thành công" }
+        }
+      },
+      "get": {
+        "summary": "Danh sách lời mời kết bạn",
+        "tags": ["Friends"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Danh sách friend requests" }
+        }
+      }
+    },
+
+    "/friends/requests/{requestId}/accept": {
+      "post": {
+        "summary": "Chấp nhận lời mời kết bạn",
+        "tags": ["Friends"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Đã chấp nhận kết bạn" }
+        }
+      }
+    },
+
+    "/friends/requests/{requestId}/decline": {
+      "post": {
+        "summary": "Từ chối lời mời kết bạn",
+        "tags": ["Friends"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Đã từ chối lời mời" }
+        }
+      }
+    },
+
+    "/friends": {
+      "get": {
+        "summary": "Danh sách bạn bè",
+        "tags": ["Friends"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Danh sách bạn bè" }
+        }
+      }
+    },
+
+    "/conversations": {
+      "post": {
+        "summary": "Tạo hội thoại",
+        "tags": ["Conversations"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["type", "memberIds"],
+                "properties": {
+                  "type": { "type": "string", "example": "group | direct" },
+                  "name": { "type": "string", "example": "Nhóm học React" },
+                  "memberIds": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Tạo hội thoại thành công" }
+        }
+      },
+      "get": {
+        "summary": "Danh sách hội thoại",
+        "tags": ["Conversations"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Danh sách conversations" }
+        }
+      }
+    },
+
+    "/conversations/{conversationId}/messages": {
+      "get": {
+        "summary": "Lấy tin nhắn trong hội thoại",
+        "tags": ["Conversations"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "conversationId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Danh sách tin nhắn" }
+        }
+      }
+    },
+
+    "/messages/direct": {
+      "post": {
+        "summary": "Gửi tin nhắn riêng",
+        "tags": ["Messages"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["recipientId", "content"],
+                "properties": {
+                  "recipientId": { "type": "string" },
+                  "content": { "type": "string", "example": "Hello bro 👋" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Gửi tin nhắn thành công" }
+        }
+      }
+    },
+
+    "/messages/group": {
+      "post": {
+        "summary": "Gửi tin nhắn nhóm",
+        "tags": ["Messages"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["conversationId", "content"],
+                "properties": {
+                  "conversationId": { "type": "string" },
+                  "content": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Gửi tin nhắn nhóm thành công" }
+        }
+      }
+    }
+  },
+
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
