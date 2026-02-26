@@ -44,116 +44,145 @@ export function SignupForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="overflow-hidden p-0 border-border">
-        <CardContent className="grid p-0 md:grid-cols-2">
+      <Card className="overflow-hidden p-0 border-border shadow-lg max-w-md mx-auto w-full">
+        <CardContent className="p-0">
           <form className="p-6 md:p-8" onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-5">
               {/* header - logo */}
-              <div className="flex flex-col items-center text-center gap-2">
-                <a href="/" className="mx-auto block w-fit text-center">
-                  <img src="/logo.svg" alt="logo" />
+              <div className="flex flex-col items-center text-center gap-3 mb-1">
+                <a
+                  href="/"
+                  className="mx-auto flex items-center justify-center w-12 h-12 bg-primary/10 rounded-xl"
+                >
+                  <span className="text-2xl font-bold text-primary">N</span>
                 </a>
 
-                <h1 className="text-2xl font-bold">Tạo tài khoản Nexo</h1>
-                <p className="text-muted-foreground text-balance">
-                  Chào mừng bạn! Hãy đăng ký để bắt đầu!
-                </p>
+                <div className="space-y-1">
+                  <h1 className="text-2xl font-bold tracking-tight">
+                    Tạo tài khoản Nexo
+                  </h1>
+                  <p className="text-muted-foreground text-sm">
+                    Chào mừng bạn! Hãy đăng ký để bắt đầu
+                  </p>
+                </div>
               </div>
 
               {/* họ & tên */}
               <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
-                  <Label htmlFor="lastname" className="block text-sm">
+                <div className="space-y-1.5">
+                  <Label htmlFor="lastname" className="text-sm font-medium">
                     Họ
                   </Label>
-                  <Input type="text" id="lastname" {...register("lastname")} />
+                  <Input
+                    type="text"
+                    id="lastname"
+                    className="h-10"
+                    placeholder="Nguyễn"
+                    {...register("lastname")}
+                  />
 
                   {errors.lastname && (
-                    <p className="error-message">{errors.lastname.message}</p>
+                    <p className="text-destructive text-sm">
+                      {errors.lastname.message}
+                    </p>
                   )}
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="fistname" className="block text-sm">
+                <div className="space-y-1.5">
+                  <Label htmlFor="fistname" className="text-sm font-medium">
                     Tên
                   </Label>
                   <Input
                     type="text"
                     id="firstname"
+                    className="h-10"
+                    placeholder="Văn A"
                     {...register("firstname")}
                   />
                   {errors.firstname && (
-                    <p className="error-message">{errors.firstname.message}</p>
+                    <p className="text-destructive text-sm">
+                      {errors.firstname.message}
+                    </p>
                   )}
                 </div>
               </div>
 
               {/* username */}
-              <div className="flex flex-col gap-3">
-                <Label htmlFor="username" className="block text-sm">
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="username" className="text-sm font-medium">
                   Tên đăng nhập
                 </Label>
                 <Input
                   type="text"
                   id="username"
-                  placeholder="nexo"
+                  className="h-10"
+                  placeholder="Ví dụ: nexo123"
                   {...register("username")}
                 />
                 {errors.username && (
-                  <p className="error-message">{errors.username.message}</p>
+                  <p className="text-destructive text-sm">
+                    {errors.username.message}
+                  </p>
                 )}
               </div>
 
               {/* email */}
-              <div className="flex flex-col gap-3">
-                <Label htmlFor="email" className="block text-sm">
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="email" className="text-sm font-medium">
                   Email
                 </Label>
                 <Input
                   type="email"
                   id="email"
-                  placeholder="m@gmail.com"
+                  className="h-10"
+                  placeholder="m@example.com"
                   {...register("email")}
                 />
                 {errors.email && (
-                  <p className="error-message">{errors.email.message}</p>
+                  <p className="text-destructive text-sm">
+                    {errors.email.message}
+                  </p>
                 )}
               </div>
 
               {/* password */}
-              <div className="flex flex-col gap-3">
-                <Label htmlFor="password" className="block text-sm">
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="password" className="text-sm font-medium">
                   Mật khẩu
                 </Label>
                 <Input
                   type="password"
                   id="password"
+                  className="h-10"
+                  placeholder="••••••••"
                   {...register("password")}
                 />
                 {errors.password && (
-                  <p className="error-message">{errors.password.message}</p>
+                  <p className="text-destructive text-sm">
+                    {errors.password.message}
+                  </p>
                 )}
               </div>
 
               {/* nút đăng ký */}
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
+              <Button
+                type="submit"
+                className="w-full h-11 text-base font-medium mt-3"
+                disabled={isSubmitting}
+              >
                 Tạo tài khoản
               </Button>
 
-              <div className="text-center text-sm">
+              <div className="text-center text-sm text-muted-foreground mt-1">
                 Đã có tài khoản?{" "}
-                <a href="/signin" className="underline underline-offset-4">
+                <a
+                  href="/signin"
+                  className="text-primary font-medium hover:underline"
+                >
                   Đăng nhập
                 </a>
               </div>
             </div>
           </form>
-          <div className="bg-muted relative hidden md:block">
-            <img
-              src="/placeholderSignUp.png"
-              alt="Image"
-              className="absolute top-1/2 -translate-y-1/2 object-cover"
-            />
-          </div>
         </CardContent>
       </Card>
       <div className=" text-xs text-balance px-6 text-center *:[a]:hover:text-primary text-muted-foreground *:[a]:underline *:[a]:underline-offetset-4">

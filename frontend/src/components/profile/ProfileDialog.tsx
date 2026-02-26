@@ -15,13 +15,10 @@ interface ProfileDialogProps {
 const ProfileDialog = ({ open, setOpen }: ProfileDialogProps) => {
   const { user } = useAuthStore();
   return (
-    <Dialog
-      open={open}
-      onOpenChange={setOpen}
-    >
-      <DialogContent className="overflow-y-auto max-h-[95vh] p-0 bg-transparent border-0 shadow-2xl">
-        <div className="bg-gradient-glass">
-          <div className="max-w-4xl mx-auto p-4">
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="max-h-[95vh] p-0 border border-border/50 shadow-xl sm:rounded-2xl bg-card overflow-hidden w-full max-w-4xl mx-auto">
+        <div className="flex flex-col h-full max-h-[95vh] overflow-y-auto beautiful-scrollbar">
+          <div className="p-6">
             {/* heading */}
             <DialogHeader className="mb-6">
               <DialogTitle className="text-2xl font-bold text-foreground">
@@ -31,26 +28,23 @@ const ProfileDialog = ({ open, setOpen }: ProfileDialogProps) => {
 
             <ProfileCard user={user} />
 
-            <Tabs
-              defaultValue="personal"
-              className="my-4"
-            >
-              <TabsList className="grid w-full grid-cols-3 glass-light">
+            <Tabs defaultValue="personal" className="my-6">
+              <TabsList className="grid w-full grid-cols-3 bg-muted/50 p-1 rounded-xl">
                 <TabsTrigger
                   value="personal"
-                  className="data-[state=active]:glass-strong"
+                  className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
                 >
                   Tài Khoản
                 </TabsTrigger>
                 <TabsTrigger
                   value="preferences"
-                  className="data-[state=active]:glass-strong"
+                  className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
                 >
                   Cấu Hình
                 </TabsTrigger>
                 <TabsTrigger
                   value="privacy"
-                  className="data-[state=active]:glass-strong"
+                  className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
                 >
                   Bảo Mật
                 </TabsTrigger>

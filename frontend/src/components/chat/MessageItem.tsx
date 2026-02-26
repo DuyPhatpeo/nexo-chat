@@ -1,7 +1,6 @@
 import { cn, formatMessageTime } from "@/lib/utils";
 import type { Conversation, Message, Participant } from "@/types/chat";
 import UserAvatar from "./UserAvatar";
-import { Card } from "../ui/card";
 import { Badge } from "../ui/badge";
 
 interface MessageItemProps {
@@ -50,7 +49,7 @@ const MessageItem = ({
       >
         {/* avatar */}
         {!message.isOwn && (
-          <div className="w-8">
+          <div className="w-8 flex-shrink-0">
             {isGroupBreak && (
               <UserAvatar
                 type="chat"
@@ -64,22 +63,22 @@ const MessageItem = ({
         {/* tin nhắn */}
         <div
           className={cn(
-            "max-w-xs lg:max-w-md space-y-1 flex flex-col",
+            "max-w-[75%] lg:max-w-md space-y-1 flex flex-col group/message relative",
             message.isOwn ? "items-end" : "items-start",
           )}
         >
-          <Card
+          <div
             className={cn(
-              "p-3",
+              "px-4 py-2 relative",
               message.isOwn
-                ? "chat-bubble-sent border-0"
-                : "chat-bubble-received",
+                ? "bg-primary text-primary-foreground rounded-2xl rounded-tr-sm shadow-sm"
+                : "bg-card border border-border/50 text-foreground rounded-2xl rounded-tl-sm shadow-sm",
             )}
           >
             <p className="text-sm leading-relaxed break-words">
               {message.content}
             </p>
-          </Card>
+          </div>
 
           {/* seen/ delivered */}
           {message.isOwn && message._id === selectedConvo.lastMessage?._id && (

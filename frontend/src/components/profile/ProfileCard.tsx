@@ -21,48 +21,57 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
   const isOnline = onlineUsers.includes(user._id) ? true : false;
 
   return (
-    <Card className="overflow-hidden p-0 h-52 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
-      <CardContent className="mt-20 pb-8 flex flex-col sm:flex-row items-center sm:items-end gap-6">
-        <div className="relative">
-          <UserAvatar
-            type="profile"
-            name={user.displayName}
-            avatarUrl={user.avatarUrl ?? undefined}
-            className="ring-4 ring-white shadow-lg"
-          />
-
-          <AvatarUploader />
+    <Card className="overflow-hidden p-0 border-none shadow-none rounded-none bg-transparent">
+      <div className="h-32 bg-primary/10 w-full rounded-xl mb-12 relative">
+        <div className="absolute -bottom-12 left-6">
+          <div className="relative">
+            <UserAvatar
+              type="profile"
+              name={user.displayName}
+              avatarUrl={user.avatarUrl ?? undefined}
+              className="ring-4 ring-background shadow-md size-24 text-2xl"
+            />
+            <AvatarUploader />
+          </div>
         </div>
+      </div>
 
+      <CardContent className="pb-6 flex flex-col sm:flex-row items-center sm:items-end justify-between gap-6 px-6">
         {/* user info */}
-        <div className="text-center sm:text-left flex-1">
-          <h1 className="text-2xl font-semibold tracking-tight text-white">
+        <div className="text-center sm:text-left flex-1 sm:ml-4">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             {user.displayName}
           </h1>
 
           {user.bio && (
-            <p className="text-white/70 text-sm mt-2 max-w-lg line-clamp-2">
+            <p className="text-muted-foreground text-sm mt-1 max-w-lg line-clamp-2">
               {user.bio}
             </p>
           )}
         </div>
 
         {/* status */}
-        <Badge
-          className={cn(
-            "flex items-center gap-1 capitalize",
-            isOnline ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-700"
-          )}
-        >
-          <div
+        <div className="flex -mt-8 sm:mt-0">
+          <Badge
+            variant="outline"
             className={cn(
-              "size-2 rounded-full",
-              isOnline ? "bg-green-500 animate-pulse" : "bg-slate-500"
+              "flex items-center gap-1.5 px-3 py-1 capitalize border-border/50",
+              isOnline
+                ? "bg-green-500/10 text-green-600 border-green-200"
+                : "bg-muted text-muted-foreground",
             )}
-          />
-
-          {isOnline ? "online" : "offline"}
-        </Badge>
+          >
+            <div
+              className={cn(
+                "size-1.5 rounded-full",
+                isOnline ? "bg-green-500 animate-pulse" : "bg-slate-400",
+              )}
+            />
+            <span className="font-medium text-xs">
+              {isOnline ? "Online" : "Offline"}
+            </span>
+          </Badge>
+        </div>
       </CardContent>
     </Card>
   );

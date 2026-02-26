@@ -32,25 +32,30 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar variant="inset" {...props}>
       {/* Header */}
-      <SidebarHeader>
+      <SidebarHeader className="border-b border-border/50 pb-2">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
               size="lg"
               asChild
-              className="bg-gradient-primary"
+              className="hover:bg-accent hover:text-accent-foreground transition-colors"
             >
               <a href="#">
-                <div className="flex w-full items-center px-2 justify-between">
-                  <h1 className="text-xl font-bold text-white">Nexo</h1>
+                <div className="flex w-full items-center px-1 justify-between">
                   <div className="flex items-center gap-2">
-                    <Sun className="size-4 text-white/80" />
+                    <div className="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-lg">
+                      <span className="text-lg font-bold text-primary">N</span>
+                    </div>
+                    <h1 className="text-xl font-bold tracking-tight">Nexo</h1>
+                  </div>
+                  <div className="flex items-center gap-2 px-2 py-1 rounded-full bg-secondary/50 border border-border/50">
+                    <Sun className="size-3.5 text-muted-foreground" />
                     <Switch
                       checked={isDark}
                       onCheckedChange={toggleTheme}
-                      className="data-[state=checked]:bg-background/80"
+                      className="scale-75 data-[state=checked]:bg-primary"
                     />
-                    <Moon className="size-4 text-white/80" />
+                    <Moon className="size-3.5 text-muted-foreground" />
                   </div>
                 </div>
               </a>

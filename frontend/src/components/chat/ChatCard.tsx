@@ -27,9 +27,8 @@ const ChatCard = ({
     <Card
       key={convoId}
       className={cn(
-        "border-none p-3 cursor-pointer transition-smooth glass hover:bg-muted/30",
-        isActive &&
-          "ring-2 ring-primary/50 bg-gradient-to-tr from-primary-glow/10 to-primary-foreground"
+        "border-transparent bg-transparent shadow-none p-3 cursor-pointer transition-colors hover:bg-muted/50 rounded-xl",
+        isActive && "bg-primary/5 hover:bg-primary/10",
       )}
       onClick={() => onSelect(convoId)}
     >
@@ -41,7 +40,7 @@ const ChatCard = ({
             <h3
               className={cn(
                 "font-semibold text-sm truncate",
-                unreadCount && unreadCount > 0 && "text-foreground"
+                unreadCount && unreadCount > 0 && "text-foreground",
               )}
             >
               {name}
@@ -53,7 +52,9 @@ const ChatCard = ({
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1 flex-1 min-w-0">{subtitle}</div>
+            <div className="flex items-center gap-1 flex-1 min-w-0">
+              {subtitle}
+            </div>
             <MoreHorizontal className="size-4 text-muted-foreground opacity-0 group-hover:opacity-100 hover:size-5 transition-smooth" />
           </div>
         </div>

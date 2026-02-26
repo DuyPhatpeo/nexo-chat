@@ -7,6 +7,8 @@ import UserAvatar from "./UserAvatar";
 import StatusBadge from "./StatusBadge";
 import GroupChatAvatar from "./GroupChatAvatar";
 import { useSocketStore } from "@/stores/useSocketStore";
+import { Phone, Video, Search, MoreVertical } from "lucide-react";
+import { Button } from "../ui/button";
 
 const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
   const { conversations, activeConversationId } = useChatStore();
@@ -41,37 +43,81 @@ const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
           className="mr-2 data-[orientation=vertical]:h-4"
         />
 
-        <div className="p-2 w-full flex items-center gap-3">
-          {/* avatar */}
-          <div className="relative">
-            {chat.type === "direct" ? (
-              <>
-                <UserAvatar
-                  type={"sidebar"}
-                  name={otherUser?.displayName || "Nexo"}
-                  avatarUrl={otherUser?.avatarUrl || undefined}
+        <div className="p-2 w-full flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {/* avatar */}
+            <div className="relative">
+              {chat.type === "direct" ? (
+                <>
+                  <UserAvatar
+                    type={"sidebar"}
+                    name={otherUser?.displayName || "Nexo"}
+                    avatarUrl={otherUser?.avatarUrl || undefined}
+                  />
+                  {/* todo: socket io */}
+                  <StatusBadge
+                    status={
+                      onlineUsers.includes(otherUser?._id ?? "")
+                        ? "online"
+                        : "offline"
+                    }
+                  />
+                </>
+              ) : (
+                <GroupChatAvatar
+                  participants={chat.participants}
+                  type="sidebar"
                 />
-                {/* todo: socket io */}
-                <StatusBadge
-                  status={
-                    onlineUsers.includes(otherUser?._id ?? "")
-                      ? "online"
-                      : "offline"
-                  }
-                />
-              </>
-            ) : (
-              <GroupChatAvatar
-                participants={chat.participants}
-                type="sidebar"
-              />
-            )}
+              )}
+            </div>
+
+            {/* name */}
+            <div className="flex flex-col">
+              <h2 className="font-semibold text-foreground text-sm">
+                {chat.type === "direct"
+                  ? otherUser?.displayName
+                  : chat.group?.name}
+              </h2>
+              {chat.type === "direct" &&
+                onlineUsers.includes(otherUser?._id ?? "") && (
+                  <span className="text-xs text-status-online">
+                    Đang hoạt động
+                  </span>
+                )}
+            </div>
           </div>
 
-          {/* name */}
-          <h2 className="font-semibold text-foreground">
-            {chat.type === "direct" ? otherUser?.displayName : chat.group?.name}
-          </h2>
+          {/* Actions */}
+          <div className="flex items-center gap-1 sm:gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-muted-foreground hover:text-primary rounded-full hidden sm:flex"
+            >
+              <Phone className="size-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-muted-foreground hover:text-primary rounded-full hidden sm:flex"
+            >
+              <Video className="size-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-muted-foreground hover:text-primary rounded-full"
+            >
+              <Search className="size-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-muted-foreground hover:text-primary rounded-full"
+            >
+              <MoreVertical className="size-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </header>

@@ -42,29 +42,29 @@ const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
   };
 
   return (
-    <div className="flex items-center gap-2 p-3 min-h-[56px] bg-background">
+    <div className="flex items-center gap-2 px-4 py-3 bg-background border-t border-border/50 min-h-[64px]">
       <Button
         variant="ghost"
         size="icon"
-        className="hover:bg-primary/10 transition-smooth"
+        className="text-muted-foreground hover:text-foreground hover:bg-secondary/80 flex-shrink-0"
       >
-        <ImagePlus className="size-4" />
+        <ImagePlus className="size-5" />
       </Button>
 
-      <div className="flex-1 relative">
+      <div className="flex-1 relative bg-secondary/30 rounded-full border border-border/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all flex items-center pr-12">
         <Input
           onKeyPress={handleKeyPress}
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="Soạn tin nhắn..."
-          className="pr-20 h-9 bg-white border-border/50 focus:border-primary/50 transition-smooth resize-none"
-        ></Input>
-        <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
+          placeholder="Viết tin nhắn..."
+          className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 px-4 h-10 w-full"
+        />
+        <div className="absolute right-1">
           <Button
             asChild
             variant="ghost"
             size="icon"
-            className="size-8 hover:bg-primary/10 transition-smooth"
+            className="size-8 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary/80 cursor-pointer"
           >
             <div>
               <EmojiPicker
@@ -77,10 +77,11 @@ const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
 
       <Button
         onClick={sendMessage}
-        className="bg-gradient-chat hover:shadow-glow transition-smooth hover:scale-105"
+        size="icon"
+        className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full flex-shrink-0 size-10 shadow-sm"
         disabled={!value.trim()}
       >
-        <Send className="size-4 text-white" />
+        <Send className="size-4" />
       </Button>
     </div>
   );
