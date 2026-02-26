@@ -33,6 +33,8 @@ export const sendDirectMessage = async (req, res) => {
       });
     }
 
+    const isNewConversation = !conversationId && conversation;
+
     const message = await Message.create({
       conversationId: conversation._id,
       senderId,
@@ -42,6 +44,26 @@ export const sendDirectMessage = async (req, res) => {
     updateConversationAfterCreateMessage(conversation, message, senderId);
 
     await conversation.save();
+
+    if (isNewConversation) {
+      await conversation.populate([
+        { path: "participants.userId", select: "displayName avatarUrl" },
+        {
+          path: "seenBy",
+          select: "displayName avatarUrl",
+        },
+        { path: "lastMessage.senderId", select: "displayName avatarUrl" },
+      ]);
+      const participants = (conversation.participants || []).map((p) => ({
+        _id: p.userId?._id,
+        displayName: p.userId?.displayName,
+        avatarUrl: p.userId?.avatarUrl ?? null,
+        joinedAt: p.joinedAt,
+      }));
+      const formatted = { ...conversation.toObject(), participants };
+
+      io.to(recipientId).emit("new-group", formatted);
+    }
 
     emitNewMessage(io, conversation, message);
 
