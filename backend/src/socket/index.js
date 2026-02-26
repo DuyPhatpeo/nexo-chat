@@ -17,14 +17,18 @@ const io = new Server(server, {
 
 io.use(socketAuthMiddleware);
 
-const onlineUsers = new Map(); // {userId: socketId}
+const onlineUsers = new Map(); // {userId: [socketId1, socketId2]}
 
 io.on("connection", async (socket) => {
   const user = socket.user;
+  const userId = user._id.toString();
 
   // console.log(`${user.displayName} online với socket ${socket.id}`);
 
-  onlineUsers.set(user._id, socket.id);
+  if (!onlineUsers.has(userId)) {
+    onlineUsers.set(userId, []);
+  }
+  onlineUsers.get(userId).push(socket.id);
 
   io.emit("online-users", Array.from(onlineUsers.keys()));
 
@@ -37,10 +41,19 @@ io.on("connection", async (socket) => {
     socket.join(conversationId);
   });
 
-  socket.join(user._id.toString());
+  socket.join(userId);
 
   socket.on("disconnect", () => {
-    onlineUsers.delete(user._id);
+    const userSockets = onlineUsers.get(userId);
+    if (userSockets) {
+      const updatedSockets = userSockets.filter((id) => id !== socket.id);
+      if (updatedSockets.length === 0) {
+        onlineUsers.delete(userId);
+      } else {
+        onlineUsers.set(userId, updatedSockets);
+      }
+    }
+
     io.emit("online-users", Array.from(onlineUsers.keys()));
     /* console.log(`socket disconnected: ${socket.id}`); */
   });

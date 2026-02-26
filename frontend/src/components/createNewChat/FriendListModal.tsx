@@ -4,10 +4,13 @@ import { MessageCircleMore, Users } from "lucide-react";
 import { Card } from "../ui/card";
 import UserAvatar from "../chat/UserAvatar";
 import { useChatStore } from "@/stores/useChatStore";
+import { useSocketStore } from "@/stores/useSocketStore";
+import StatusBadge from "../chat/StatusBadge";
 
 const FriendListModal = () => {
   const { friends } = useFriendStore();
   const { createConversation } = useChatStore();
+  const { onlineUsers } = useSocketStore();
 
   const handleAddConversation = async (friendId: string) => {
     await createConversation("direct", "", [friendId]);
@@ -42,6 +45,11 @@ const FriendListModal = () => {
                     type="sidebar"
                     name={friend.displayName}
                     avatarUrl={friend.avatarUrl}
+                  />
+                  <StatusBadge
+                    status={
+                      onlineUsers.includes(friend._id) ? "online" : "offline"
+                    }
                   />
                 </div>
 
