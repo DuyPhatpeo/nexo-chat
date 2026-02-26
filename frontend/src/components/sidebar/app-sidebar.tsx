@@ -43,8 +43,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <a href="#">
                 <div className="flex w-full items-center px-1 justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-lg">
-                      <span className="text-lg font-bold text-primary">N</span>
+                    <div className="flex items-center justify-center w-8 h-8 rounded-lg overflow-hidden shrink-0">
+                      <img
+                        src="/logo.svg"
+                        alt="Nexo Logo"
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                     <h1 className="text-xl font-bold tracking-tight">Nexo</h1>
                   </div>
